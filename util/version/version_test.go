@@ -110,6 +110,18 @@ func TestGetVersion(t *testing.T) {
 			want:    nil,
 			wantErr: true,
 		},
+		{
+			name:    "sumo version",
+			args:    args{version: "21.0-1571107855-1410-599b8254c7bb"},
+			want:    &types.Version{
+				Major:    21,
+				Minor:    0,
+				Patch:    1571107855,
+				PreRelease:	"1410-599b8254c7bb",
+				Original: "21.0-1571107855-1410-599b8254c7bb",
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -2,6 +2,7 @@ package version
 
 import (
 	"errors"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -28,8 +29,29 @@ func MustParse(version string) *types.Version {
 	return ver
 }
 
+
+func IsSumoVersion(version string) bool {
+	const SumoVersionRegex string = `([0-9]+){1}(\.[0-9]+){1}` +
+		`(-(\d{10})-(\d{4})-([0-9A-Za-z]+)){1}`
+	sumoRegex := regexp.MustCompile("^" + SumoVersionRegex + "$")
+	return sumoRegex.MatchString(version)
+}
+
+
+func GetSemverFromSumoVersion(version string) (string) {
+	if IsSumoVersion(version) {
+		log.WithFields(log.Fields{"sumoVersion": version}).Debug("Found a sumo version")
+		version = strings.Replace(version, "-", ".", 1)
+		log.WithFields(log.Fields{"tempModifiedSumoVersion": version}).Debug("Changed sumo version to semver type")
+	}
+	return version
+}
+
 // GetVersion - parse version
 func GetVersion(version string) (*types.Version, error) {
+
+	originalVersion := version
+	version = GetSemverFromSumoVersion(version)
 
 	parts := strings.SplitN(version, ".", 3)
 	if len(parts) != 3 {
@@ -50,7 +72,7 @@ func GetVersion(version string) (*types.Version, error) {
 		Patch:      v.Patch(),
 		PreRelease: string(v.Prerelease()),
 		Metadata:   v.Metadata(),
-		Original:   v.Original(),
+		Original:   originalVersion,
 	}, nil
 }
 

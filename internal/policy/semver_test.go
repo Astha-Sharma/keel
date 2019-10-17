@@ -186,6 +186,76 @@ func Test_shouldUpdate(t *testing.T) {
 			want:    false,
 			wantErr: true,
 		},
+		{
+			name: "sumo timestamp (modified patch) increase, policy all",
+			args: args{
+				current: "21.0-1571107855-1410-599b8254c7bb",
+				new:     "21.0-1571107856-1410-599b8254c7bb",
+				spt:     SemverPolicyTypeAll,
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "sumo timestamp (modified patch) increase, policy major",
+			args: args{
+				current: "21.0-1571107855-1410-599b8254c7bb",
+				new:     "21.0-1571107856-1410-599b8254c7bb",
+				spt:     SemverPolicyTypeMajor,
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "sumo timestamp (modified patch) increase, policy minor",
+			args: args{
+				current: "21.0-1571107855-1410-599b8254c7bb",
+				new:     "21.0-1571107856-1410-599b8254c7bb",
+				spt:     SemverPolicyTypeMinor,
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "sumo timestamp (modified patch) increase, policy patch",
+			args: args{
+				current: "21.0-1571107855-1410-599b8254c7bb",
+				new:     "21.0-1571107856-1410-599b8254c7bb",
+				spt:     SemverPolicyTypePatch,
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "sumo minor increase, policy all",
+			args: args{
+				current: "21.0-1571107855-1410-599b8254c7bb",
+				new:     "21.1-1571107855-1410-599b8254c7bb",
+				spt:     SemverPolicyTypeAll,
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "sumo jenkins build number (different pre-release) increase, policy all",
+			args: args{
+				current: "21.0-1571107855-1410-599b8254c7bb",
+				new:     "21.0-1571107855-1411-599b8254c7bb",
+				spt:     SemverPolicyTypeAll,
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "sumo jenkins build number (different pre-release) increase, policy patch",
+			args: args{
+				current: "21.0-1571107855-1410-599b8254c7bb",
+				new:     "21.0-1571107855-1411-599b8254c7bb",
+				spt:     SemverPolicyTypePatch,
+			},
+			want:    true,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

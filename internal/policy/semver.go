@@ -3,6 +3,7 @@ package policy
 import (
 	"errors"
 	"fmt"
+	"github.com/keel-hq/keel/util/version"
 	"strings"
 
 	"github.com/Masterminds/semver"
@@ -66,22 +67,25 @@ func shouldUpdate(spt SemverPolicyType, current, new string) (bool, error) {
 		return true, nil
 	}
 
-	parts := strings.SplitN(new, ".", 3)
+	currentSumoModifiedSemver := version.GetSemverFromSumoVersion(current)
+	newSumoModifiedSemver := version.GetSemverFromSumoVersion(new)
+
+	parts := strings.SplitN(newSumoModifiedSemver, ".", 3)
 	if len(parts) != 3 {
 		return false, ErrNoMajorMinorPatchElementsFound
 	}
 
-	currentVersion, err := semver.NewVersion(current)
+	currentVersion, err := semver.NewVersion(currentSumoModifiedSemver)
 	if err != nil {
 		return false, fmt.Errorf("failed to parse current version: %s", err)
 	}
 
-	newVersion, err := semver.NewVersion(new)
+	newVersion, err := semver.NewVersion(newSumoModifiedSemver)
 	if err != nil {
 		return false, fmt.Errorf("failed to parse new version: %s", err)
 	}
 
-	if currentVersion.Prerelease() != newVersion.Prerelease() && spt != SemverPolicyTypeAll {
+	if currentVersion.Prerelease() != newVersion.Prerelease() && spt != SemverPolicyTypeAll && !version.IsSumoVersion(new){
 		return false, nil
 	}
 
