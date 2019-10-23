@@ -31,8 +31,9 @@ func MustParse(version string) *types.Version {
 
 
 func IsSumoVersion(version string) bool {
+	// match old version format 20.1-1234 as well as new one 21.0-1571814160-1234-ca5f12c6
 	const SumoVersionRegex string = `([0-9]+){1}(\.[0-9]+){1}` +
-		`(-(\d{10})-(\d{4})-([0-9A-Za-z]+)){1}`
+		`(-(\d{10}))?(-(\d+))(-([0-9A-Za-z]+))?`
 	sumoRegex := regexp.MustCompile("^" + SumoVersionRegex + "$")
 	return sumoRegex.MatchString(version)
 }

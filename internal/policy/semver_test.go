@@ -187,6 +187,16 @@ func Test_shouldUpdate(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "sumo old version build number increase, policy all",
+			args: args{
+				current: "20.1-9638",
+				new:     "20.1-9639",
+				spt:     SemverPolicyTypeAll,
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
 			name: "sumo timestamp (modified patch) increase, policy all",
 			args: args{
 				current: "21.0-1571107855-1410-599b8254c7bb",

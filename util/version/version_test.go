@@ -111,7 +111,18 @@ func TestGetVersion(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "sumo version",
+			name:    "sumo version- old",
+			args:    args{version: "20.1-9638"},
+			want:    &types.Version{
+				Major:    20,
+				Minor:    1,
+				Patch:    9638,
+				Original: "20.1-9638",
+			},
+			wantErr: false,
+		},
+		{
+			name:    "sumo version- new",
 			args:    args{version: "21.0-1571107855-1410-599b8254c7bb"},
 			want:    &types.Version{
 				Major:    21,
